@@ -61,33 +61,56 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section id="heroSection" className="grid grid-cols-1 lg:grid-cols-2 p-[20px] lg:p-[133.333px_85.333px] items-center justify-between gap-[32px] bg-white mt-[100px] mb-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-black/5">
-      <div className="flex flex-col items-start gap-[32px]">
-        <div className="flex flex-col items-start gap-[21.333px]">
-          <p className="text-heading text-[21px] text-center font-semibold leading-[32px] flex items-start">
-            Hey, I'm <span className="text-[1.5em] text-primary font-bold ml-[8px]">Khumbulani</span>
+    <section
+      id="heroSection"
+      className="grid grid-cols-1 lg:grid-cols-2 items-center gap-[40px] bg-white mt-[90px] mb-[30px] mx-[10px] lg:mx-[85px] px-[20px] py-[40px] lg:px-[40px] lg:py-[20px] rounded-[40px] shadow-[0_10px_40px_rgba(0,0,0,0.05)] border border-black/5"
+    >
+      <div className="flex flex-col gap-[24px]">
+        <div className="flex flex-col gap-[18px]">
+          <p className="text-heading text-[18px] lg:text-[24px] font-semibold">
+            Hey, I'm{" "}
+            <span className="text-primary font-bold ml-[2px]">
+              Khumbulani
+            </span>
           </p>
-          <h1 className="text-heading text-[35px] lg:text-[74.667px] font-bold leading-[40px] lg:leading-[90px] self-stretch">
+
+          <h1 className="text-heading text-[26px] lg:text-[45px] font-bold leading-[40px] lg:leading-[60px]">
             <span className="text-primary">{text}</span>
             <span className="animate-blink ml-[4px] text-primary">|</span>
           </h1>
-          <p className="text-darkblue text-[24px] font-normal leading-[36px]">
-            Building modern and scalable web applications with a focus on user experience.
-            <br /> Let's create something amazing together.
+
+          <p className="text-darkblue text-[18px] lg:text-[22px] font-normal leading-[32px] max-w-[650px]">
+            Building modern and scalable web applications with a focus on user
+            experience.
+            <br />
+            Let’s create something impactful.
           </p>
         </div>
-        <div className="flex gap-[20px] mt-[21.333px]">
-          <button className="inline-block py-[14px] px-[32px] text-base font-normal cursor-pointer text-center no-underline rounded-[50px] transition-all duration-300 ease-in-out border border-primary text-white bg-primary hover:bg-white hover:text-primary hover:scale-105">Get In Touch</button>
-          <button 
-            className="inline-block py-[14px] px-[32px] text-base font-normal cursor-pointer text-center no-underline rounded-[50px] transition-all duration-300 ease-in-out border border-primary text-primary bg-white hover:bg-primary hover:text-white hover:scale-105" 
+
+        <div className="flex flex-wrap gap-[16px]">
+          <button className="inline-block py-[14px] px-[32px] text-base cursor-pointer rounded-[50px] transition-all duration-300 border border-primary text-white bg-primary hover:bg-white hover:text-primary hover:scale-105">
+            Get In Touch
+          </button>
+
+          <button
+            className="inline-block py-[14px] px-[32px] text-base cursor-pointer rounded-[50px] transition-all duration-300 border border-primary text-primary bg-white hover:bg-primary hover:text-white hover:scale-105"
             onClick={handleDownloadResume}
           >
             Download Resume
           </button>
         </div>
       </div>
-      <div className="flex w-full h-full">
-        <img src="/img/hero_img.png" alt="Hero Section" className="w-full h-full object-cover" />
+
+      <div className="flex items-center justify-center">
+        <div className="p-2 border-2 border-primary rounded-full">
+          <div className="p-3 border-4 border-primary rounded-full overflow-hidden">
+            <img
+              src="/img/casual-hero.jpg"
+              alt="Hero"
+              className="w-[280px] h-[280px] lg:w-[400px] lg:h-[420px] object-cover rounded-full"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

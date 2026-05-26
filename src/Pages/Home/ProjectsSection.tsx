@@ -45,16 +45,16 @@ const ProjectsSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-[70px] lg:py-[100px] px-[20px] lg:px-[85px] bg-bg-shade" id="projects">
+    <section className="py-[70px] lg:py-[100px] px-[20px] lg:px-[85px] bg-white mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 shadow-sm" id="projects">
       <div className="w-full max-w-[1333px] mx-auto">
-        <h2 className="text-heading text-[35px] lg:text-[48px] font-bold leading-[40px] lg:leading-[58px] text-center">My <span className="text-primary">Projects</span></h2>
+        <h2 className="text-primary text-[35px] lg:text-[48px] font-bold leading-[40px] lg:leading-[58px] text-center">Projects</h2>
         <p className="text-black text-[21.3px] font-normal leading-[32px] text-center mt-[20px] mb-[60px] max-w-[600px] mx-auto">
           Explore my latest work, ranging from full-stack applications to AI-powered tools.
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
           {projects.map((project, index) => (
-            <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col border border-transparent hover:border-primary hover:-translate-y-[10px] hover:shadow-[0_15px_30px_rgba(94,59,238,0.1)]" key={index}>
+            <div className="bg-bg-shade rounded-[20px] overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.05)] transition-all duration-300 flex flex-col border border-transparent hover:border-primary hover:-translate-y-[10px] hover:shadow-[0_15px_30px_rgba(94,59,238,0.1)]" key={index}>
               <div className="w-full h-[220px] overflow-hidden">
                 <img src={project.imgUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
               </div>

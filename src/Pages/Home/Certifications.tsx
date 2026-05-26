@@ -29,10 +29,10 @@ const Certifications: React.FC = () => {
   ];
 
   return (
-    <section id="Certifications" className="py-[70px] lg:py-[100px] px-[20px] lg:px-[85px] bg-white">
+    <section id="Certifications" className="py-[70px] lg:py-[100px] px-[20px] lg:px-[85px] bg-white mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 shadow-sm">
       <div className="w-full max-w-[1333px] mx-auto">
         <div className="text-center mb-[60px]">
-          <h2 className="text-heading text-[35px] lg:text-[48px] font-bold leading-[40px] lg:leading-[58px]">My <span className="text-primary">Certifications</span></h2>
+          <h2 className="text-primary text-[35px] lg:text-[48px] font-bold leading-[40px] lg:leading-[58px]">Certifications</h2>
           <p className="text-darkblue text-[18px] font-normal leading-[27px]">Professional recognitions and verified skills.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[30px]">
