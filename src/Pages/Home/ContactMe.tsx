@@ -9,6 +9,7 @@ type Status = "idle" | "sending" | "success" | "error";
  * Falls back to a mailto: link when EmailJS keys are not configured.
  */
 const ContactMe: React.FC = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -16,12 +17,12 @@ const ContactMe: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !message.trim()) return;
+    if (!name.trim() || !email.trim() || !message.trim()) return;
 
     // Fallback: no EmailJS keys configured -> open the visitor's mail client.
     if (!isEmailConfigured) {
-      const subject = encodeURIComponent("Portfolio enquiry");
-      const body = encodeURIComponent(`From: ${email}\n\n${message}`);
+      const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
+      const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
       window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
       return;
     }
@@ -32,6 +33,7 @@ const ContactMe: React.FC = () => {
         EMAILJS.serviceId,
         EMAILJS.templateId,
         {
+          from_name: name,
           from_email: email,
           reply_to: email,
           message,
@@ -40,6 +42,7 @@ const ContactMe: React.FC = () => {
       );
       setStatus("success");
       setFeedback("Thanks! Your message has been sent. I'll get back to you soon.");
+      setName("");
       setEmail("");
       setMessage("");
     } catch (err) {
@@ -185,6 +188,27 @@ const ContactMe: React.FC = () => {
           {/* Contact Form */}
           <div className="w-full bg-surface p-[30px] rounded-[20px] shadow-sm">
             <form className="flex flex-col gap-[25px]" onSubmit={handleSubmit}>
+
+              {/* Name */}
+              <label
+                htmlFor="name"
+                className="flex flex-col items-start gap-[10px] w-full"
+              >
+                <span className="text-[16px] font-semibold text-darkblue">
+                  Name
+                </span>
+
+                <input
+                  type="text"
+                  className="w-full p-[16px] rounded-[12px] border border-gray-200 dark:border-white/15 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface text-[16px] text-darkblue transition-all"
+                  name="name"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  required
+                />
+              </label>
 
               {/* Email */}
               <label
