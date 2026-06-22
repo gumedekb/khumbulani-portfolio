@@ -62,10 +62,10 @@ const Navbar: React.FC = () => {
             <Link onClick={closeMenu} activeClass="text-primary" spy={true} smooth={true} offset={-70} duration={500} to="technicalSkills" className="text-darkblue text-base font-normal cursor-pointer leading-[24px] hover:text-primary transition-colors">Skills</Link>
           </li>
           <li>
-            <Link onClick={closeMenu} activeClass="text-primary" spy={true} smooth={true} offset={-70} duration={500} to="Education" className="text-darkblue text-base font-normal cursor-pointer leading-[24px] hover:text-primary transition-colors">Education</Link>
+            <Link onClick={closeMenu} activeClass="text-primary" spy={true} smooth={true} offset={-70} duration={500} to="projects" className="text-darkblue text-base font-normal cursor-pointer leading-[24px] hover:text-primary transition-colors">Projects</Link>
           </li>
           <li>
-            <Link onClick={closeMenu} activeClass="text-primary" spy={true} smooth={true} offset={-70} duration={500} to="projects" className="text-darkblue text-base font-normal cursor-pointer leading-[24px] hover:text-primary transition-colors">Projects</Link>
+            <Link onClick={closeMenu} activeClass="text-primary" spy={true} smooth={true} offset={-70} duration={500} to="Education" className="text-darkblue text-base font-normal cursor-pointer leading-[24px] hover:text-primary transition-colors">Education</Link>
           </li>
         </ul>
       </div>
