@@ -26,8 +26,12 @@ const Education: React.FC = () => {
       </div>
       
       <div className="w-full max-w-[1333px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-[40px] lg:gap-[80px] items-center">
-        <div className="education--left">
-          <img src="/img/graduation.jpg" alt="Graduation" className="w-full max-w-[450px] mx-auto rounded-[30px] shadow-lg" />
+        <div className="education--left flex justify-center">
+          <div className="p-2 border-2 border-primary rounded-[30px] w-full max-w-[450px]">
+            <div className="p-4 border-4 border-primary rounded-[30px] overflow-hidden">
+              <img src="/img/graduation.jpg" alt="Graduation" className="w-full rounded-[20px] shadow-lg" />
+            </div>
+          </div>
         </div>
         
         <div className="education--right">
