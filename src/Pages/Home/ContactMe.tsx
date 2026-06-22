@@ -82,8 +82,16 @@ const ContactMe: React.FC = () => {
       setMessage("");
     } catch (err) {
       console.error("EmailJS send failed:", err);
+      // EmailJS rejects with { status, text } — surface it so the real cause
+      // (rate limit, bad template, quota, etc.) is visible instead of generic.
+      const detail =
+        err && typeof err === "object" && "text" in err && (err as { text?: string }).text
+          ? ` (${(err as { text: string }).text})`
+          : "";
       setStatus("error");
-      setFeedback("Something went wrong. Please email me directly at " + CONTACT.email + ".");
+      setFeedback(
+        `Something went wrong${detail}. Please email me directly at ${CONTACT.email}.`
+      );
     }
   };
 
