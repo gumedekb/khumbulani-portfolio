@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode: `dark:` variants + `.dark` on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #5e3bee;
   --color-heading: #282938;
@@ -7,20 +10,43 @@
   --color-github: #e62872;
   --color-darkblue: #1c1e53;
 
+  /* Semantic surface tokens (swap automatically in dark mode) */
+  --color-surface: #ffffff;
+  --color-page: #ffffff;
+
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
 }
 
+/*
+ * Dark theme palette (requested):
+ *   --bg: #0D0B1F  --card: #17142E  --primary: #7C5CFF
+ *   --text: #FFFFFF  --text-secondary: #C4B5FD
+ * We simply re-point the existing theme variables, so every
+ * `bg-surface` / `text-heading` / `text-primary` utility flips
+ * with no per-element changes. The accent (border-primary) stays
+ * a vivid violet so the signature borders remain visible.
+ */
+.dark {
+  --color-primary: #7c5cff;
+  --color-heading: #ffffff;
+  --color-darkblue: #c4b5fd;
+  --color-surface: #17142e;
+  --color-bg-shade: #0d0b1f;
+  --color-page: #0d0b1f;
+}
+
 .animate-blink {
   animation: blink 0.7s infinite;
 }
-
 
 @layer base {
   body {
     @apply m-0 font-sans antialiased;
     font-family: "Roboto", sans-serif;
+    background-color: var(--color-page);
+    transition: background-color 0.3s ease;
   }
 }

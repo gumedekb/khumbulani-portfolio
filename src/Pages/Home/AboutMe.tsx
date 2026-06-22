@@ -5,7 +5,7 @@ import React from "react";
  */
 const AboutMe: React.FC = () => {
   return (
-    <section id="AboutMe" className="grid grid-cols-1 lg:grid-cols-2 p-[20px] lg:p-[70px_85px] items-center gap-[40px] lg:gap-[60px] bg-white mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 shadow-sm">
+    <section id="AboutMe" className="grid grid-cols-1 lg:grid-cols-2 p-[20px] lg:p-[70px_85px] items-center gap-[40px] lg:gap-[60px] bg-surface mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 dark:border-white/10 shadow-sm">
       <div className="w-full h-full flex items-center justify-center">
         <div className="p-2 border-2 border-primary rounded-[30px]">
           <div className="p-4 border-4 border-primary rounded-[30px] overflow-hidden">
@@ -17,11 +17,16 @@ const AboutMe: React.FC = () => {
         <div className="flex flex-col items-start gap-[15px]">
           <h1 className="text-heading text-[30px] lg:text-[48px] font-bold">About <span className="text-primary">Me</span></h1>
           <p className="text-darkblue text-[18px] leading-[28px]">
-            I am a passionate software engineer with a strong foundation in modern web technologies. 
-            I love building applications that solve real-world problems and provide a great user experience.
+            I'm Khumbulani Gumede, a Computer Science &amp; IT graduate from the
+            University of KwaZulu-Natal, with concentrations in Computer Systems
+            and AI. I build full-stack web applications and enjoy turning complex
+            problems into clean, reliable software.
           </p>
           <p className="text-darkblue text-[18px] leading-[28px]">
-            With expertise in both front-end and back-end development, I enjoy working on all aspects of a project.
+            Alongside development, I'm deepening my expertise in cybersecurity —
+            from web application pentesting and red teaming to SOC analysis and
+            DevSecOps — through hands-on TryHackMe learning paths. I love working
+            across the full stack while keeping security front of mind.
           </p>
         </div>
       </div>

@@ -29,7 +29,7 @@ const TechnicalSkills: React.FC = () => {
         <span className="text-[16px] font-semibold text-darkblue">{skill.name}</span>
         <span className="text-[16px] font-bold text-primary">{skill.percentage}%</span>
       </div>
-      <div className="w-full h-[10px] bg-[#e9ecef] rounded-[5px] overflow-hidden relative">
+      <div className="w-full h-[10px] bg-[#e9ecef] dark:bg-white/10 rounded-[5px] overflow-hidden relative">
         <div 
           className="h-full bg-primary rounded-[5px] relative" 
           style={{ 
@@ -42,7 +42,7 @@ const TechnicalSkills: React.FC = () => {
   );
 
   return (
-    <section className="py-[70px] px-[20px] lg:px-[85px] bg-white mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 shadow-sm" id="technicalSkills">
+    <section className="py-[70px] px-[20px] lg:px-[85px] bg-surface mt-[20px] mx-[20px] lg:mx-[85px] rounded-[40px] border border-black/5 dark:border-white/10 shadow-sm" id="technicalSkills">
       <div className="w-full max-w-[1333px] mx-auto text-center mb-[40px]">
         <h2 className="text-primary text-[35px] lg:text-[48px] font-bold">Technical Skills</h2>
       </div>
