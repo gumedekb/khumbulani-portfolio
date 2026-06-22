@@ -33,9 +33,21 @@ const ContactMe: React.FC = () => {
         EMAILJS.serviceId,
         EMAILJS.templateId,
         {
+          // Recipient = MY inbox. The template's "To Email" is {{email}},
+          // so this must be my address for the enquiry to reach me.
+          email: CONTACT.email,
+          to_email: CONTACT.email,
+
+          // The visitor's details — use these in the template body and as the
+          // Reply-To / auto-reply recipient.
+          name,
           from_name: name,
           from_email: email,
+          visitor_email: email,
           reply_to: email,
+
+          title: `New portfolio message from ${name}`,
+          time: new Date().toLocaleString(),
           message,
         },
         { publicKey: EMAILJS.publicKey }

@@ -12,15 +12,23 @@ const TechnicalSkills: React.FC = () => {
   }, []);
 
   const softwareSkills = [
-    { name: "React JS", percentage: 85 },
-    { name: "JavaScript", percentage: 90 },
-    { name: "Node.js", percentage: 80 },
+    { name: "React & TypeScript", percentage: 82 },
+    { name: "JavaScript", percentage: 80 },
+    { name: "Tailwind CSS", percentage: 80 },
+    { name: "Python (Django)", percentage: 76 },
+    { name: "Java & Spring Boot", percentage: 74 },
+    { name: "SQL (MySQL / SQLite)", percentage: 70 },
+    { name: "ML & AI APIs (Scikit-learn, Gemini)", percentage: 66 },
   ];
 
   const cyberSkills = [
-    { name: "Network Security", percentage: 90 },
-    { name: "Pentesting", percentage: 85 },
-    { name: "Incident Response", percentage: 80 },
+    { name: "Web Application Pentesting", percentage: 76 },
+    { name: "SOC Analysis (Blue Team / SIEM)", percentage: 72 },
+    { name: "Linux & Networking", percentage: 72 },
+    { name: "Web Application Red Teaming", percentage: 70 },
+    { name: "Offensive Pentesting", percentage: 68 },
+    { name: "DevSecOps", percentage: 66 },
+    { name: "Incident Response", percentage: 64 },
   ];
 
   const renderSkillBar = (skill: { name: string; percentage: number }, index: number) => (
