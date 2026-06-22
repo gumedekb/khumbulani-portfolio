@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-scroll";
 import ThemeToggle from "./ThemeToggle";
+import { useDarkMode } from "../../hooks/useDarkMode";
 
 /**
  * Navbar component for site navigation.
@@ -8,6 +9,8 @@ import ThemeToggle from "./ThemeToggle";
  */
 const Navbar: React.FC = () => {
   const [navActive, setNavActive] = useState(false);
+  const isDark = useDarkMode();
+  const logoSrc = isDark ? "/img/logo-dark.mp4" : "/img/logo-light.mp4";
 
   const toggleNav = () => {
     setNavActive(!navActive);
@@ -35,7 +38,8 @@ const Navbar: React.FC = () => {
     <nav className={`fixed top-0 left-0 right-0 flex justify-between items-center py-[3px] px-[20px] md:px-[85px] bg-surface shadow-[0px_5px_80px_0_rgba(0,0,0,0.1)] dark:shadow-[0px_5px_80px_0_rgba(0,0,0,0.6)] z-50 ${navActive ? "active" : ""}`}>
       <div className="w-24 h-20 overflow-hidden flex items-center justify-center">
         <video
-          src="/img/logo-light.mp4"
+          key={logoSrc}
+          src={logoSrc}
           autoPlay
           loop
           muted

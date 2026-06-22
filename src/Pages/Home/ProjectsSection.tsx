@@ -13,7 +13,7 @@ const ProjectsSection: React.FC = () => {
       description:
         "A full-stack football match prediction dashboard combining statistical machine learning with Generative AI (Google Gemini) for intelligent match analysis and insights.",
       tags: ["React", "FastAPI", "Python", "Gemini AI"],
-      imgUrl: "/img/project-img1.png",
+      imgUrl: "/img/project-img1.webp",
       link: "https://fifascope-eamk.vercel.app/",
     },
     {
