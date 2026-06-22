@@ -29,29 +29,52 @@ const ContactMe: React.FC = () => {
 
     try {
       setStatus("sending");
+      const time = new Date().toLocaleString();
+
+      // 1) Notification to MY inbox — carries the visitor's name, email and
+      //    message. This template's "To Email" must resolve to my address
+      //    ({{email}} below, or hardcode it in the template).
       await emailjs.send(
         EMAILJS.serviceId,
         EMAILJS.templateId,
         {
-          // Recipient = MY inbox. The template's "To Email" is {{email}},
-          // so this must be my address for the enquiry to reach me.
           email: CONTACT.email,
           to_email: CONTACT.email,
-
-          // The visitor's details — use these in the template body and as the
-          // Reply-To / auto-reply recipient.
           name,
           from_name: name,
           from_email: email,
           visitor_email: email,
           reply_to: email,
-
           title: `New portfolio message from ${name}`,
-          time: new Date().toLocaleString(),
+          time,
           message,
         },
         { publicKey: EMAILJS.publicKey }
       );
+
+      // 2) Auto-reply (thank-you) to the VISITOR. Best-effort: a failure here
+      //    shouldn't make the visitor think their message didn't go through.
+      if (EMAILJS.autoReplyTemplateId) {
+        try {
+          await emailjs.send(
+            EMAILJS.serviceId,
+            EMAILJS.autoReplyTemplateId,
+            {
+              email,
+              to_email: email,
+              name,
+              from_name: name,
+              reply_to: CONTACT.email,
+              title: "Thanks for reaching out!",
+              time,
+              message,
+            },
+            { publicKey: EMAILJS.publicKey }
+          );
+        } catch (autoErr) {
+          console.warn("Auto-reply email failed (notification still sent):", autoErr);
+        }
+      }
       setStatus("success");
       setFeedback("Thanks! Your message has been sent. I'll get back to you soon.");
       setName("");

@@ -27,11 +27,14 @@ export const CONTACT = {
 
 export const EMAILJS = {
   serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID ?? "",
+  // Notification sent to MY inbox (name / email / message of the visitor).
   templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID ?? "",
+  // Optional auto-reply (thank-you) sent back to the VISITOR.
+  autoReplyTemplateId: import.meta.env.VITE_EMAILJS_AUTOREPLY_TEMPLATE_ID ?? "",
   publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY ?? "",
 };
 
-/** True only when all three EmailJS values are present. */
+/** True only when the required EmailJS values are present. */
 export const isEmailConfigured = Boolean(
   EMAILJS.serviceId && EMAILJS.templateId && EMAILJS.publicKey
 );
