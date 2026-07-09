@@ -60,6 +60,18 @@ const ProjectsSection: React.FC = () => {
         { label: "Vulnerable Repo", url: "https://github.com/gumedekb/daily-diary-app" },
       ],
     },
+    {
+      title: "TechBrief",
+      subtitle: "AI Resume Analyzer & Career Intelligence",
+      description:
+        "An AI-powered career-intelligence tool for tech professionals. Paste a job description and it grades it against your CV — match score, matched vs. missing skills, and interview likelihood — then builds company intel, a skills radar, an application tracker, and AI cover letters from your analyses.",
+      tags: ["Next.js", "React", "TypeScript", "Supabase", "Gemini AI"],
+      imgUrl: "/img/tech-brief.webp",
+      links: [
+        { label: "Live Site", url: "https://tech-brief-flax.vercel.app/" },
+        { label: "GitHub Repo", url: "https://github.com/gumedekb/tech-brief" },
+      ],
+    },
   ];
 
   const cardClass =
