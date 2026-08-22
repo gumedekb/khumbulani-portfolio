@@ -49,7 +49,7 @@ const HeroSection: React.FC = () => {
 
   const handleDownloadResume = () => {
     const link = document.createElement("a");
-    link.href = "/cv/CV_Khumbulani_Gumede.pdf";
+    link.href = "/cv/CV_KHUMBULANI_GUMEDE.pdf";
     link.download = "Khumbulani_Gumede_CV.pdf";
     document.body.appendChild(link);
     link.click();
