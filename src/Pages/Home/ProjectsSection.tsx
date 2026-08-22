@@ -14,6 +14,10 @@ type Project = {
   // instead of a full-bleed screenshot.
   logo?: boolean;
   logoBg?: string;
+  // Optional status banner (e.g. "Obsolete", "Archived"). When set, a red
+  // badge is shown on the card + modal and the media is dimmed to signal the
+  // project is no longer live.
+  status?: string;
 };
 
 const ExternalLinkIcon = () => (
@@ -64,6 +68,7 @@ const ProjectsSection: React.FC = () => {
       ],
       tags: ["React", "FastAPI", "Python", "Machine Learning", "Pandas", "Gemini AI", "Tailwind CSS"],
       imgUrl: "/img/project-img1.webp",
+      status: "Obsolete",
       links: [
         { label: "Live Site", url: "https://fifascope-eamk.vercel.app/" },
         { label: "GitHub Repo", url: "https://github.com/gumedekb/fifascope" },
@@ -170,8 +175,13 @@ const ProjectsSection: React.FC = () => {
               <div className="relative w-full h-[220px] overflow-hidden">
                 <ProjectMedia
                   project={project}
-                  className="w-full h-full [&>img]:transition-transform [&>img]:duration-500 group-hover:[&>img]:scale-110"
+                  className={`w-full h-full [&>img]:transition-transform [&>img]:duration-500 group-hover:[&>img]:scale-110 ${project.status ? "[&>img]:grayscale [&>img]:opacity-60" : ""}`}
                 />
+                {project.status && (
+                  <span className="absolute top-[14px] left-[14px] z-10 bg-red-600 text-white text-[11px] font-bold uppercase tracking-[1px] py-[5px] px-[12px] rounded-full shadow-md">
+                    {project.status}
+                  </span>
+                )}
                 <span className="absolute top-[14px] right-[14px] bg-primary text-white text-[12px] font-semibold py-[5px] px-[12px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
                   View details
                 </span>
@@ -246,9 +256,14 @@ const ProjectsSection: React.FC = () => {
             <div className="relative">
               <ProjectMedia
                 project={selected}
-                className="w-full h-[190px]"
+                className={`w-full h-[190px] ${selected.status ? "[&>img]:grayscale [&>img]:opacity-60" : ""}`}
                 imgClassName="w-[96px] h-[96px] object-contain"
               />
+              {selected.status && (
+                <span className="absolute top-[16px] left-[16px] z-10 bg-red-600 text-white text-[12px] font-bold uppercase tracking-[1px] py-[6px] px-[14px] rounded-full shadow-md">
+                  {selected.status}
+                </span>
+              )}
               {!selected.logo && (
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               )}
