@@ -57,6 +57,26 @@ const ProjectMedia: React.FC<{ project: Project; className: string; imgClassName
 const ProjectsSection: React.FC = () => {
   const projects: Project[] = [
     {
+      title: "Snaccchat",
+      subtitle: "Real-Time Chat App & Security Case Study",
+      description:
+        "A real-time messaging app with direct & group chat, presence, typing indicators and read receipts \u2014 built as a security case study, taking a deliberately vulnerable build and hardening it into a secure production version.",
+      features: [
+        "Real-time DMs & group chat over WebSocket/STOMP",
+        "Presence, typing indicators & read receipts",
+        "Pentested & hardened: AES-encrypted messages, JWT auth",
+      ],
+      tags: ["React 19", "Spring Boot", "Java 21", "WebSocket", "PostgreSQL", "JWT", "Pentesting"],
+      imgUrl: "/img/snaccchat.svg",
+      logo: true,
+      logoBg: "#4f6bed",
+      links: [
+        { label: "Live Demo", url: "https://snaccchat-app.vercel.app/" },
+        { label: "GitHub Repo", url: "https://github.com/gumedekb/snaccchat-app" },
+        { label: "Security Diff", url: "https://github.com/gumedekb/snaccchat-app/compare/vulnerable...main" },
+      ],
+    },
+    {
       title: "FifaScope",
       subtitle: "Football Prediction Dashboard",
       description:
