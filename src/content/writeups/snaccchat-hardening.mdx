@@ -2,10 +2,10 @@ export const metadata = {
   title: "Hardening Snaccchat: securing a real-time chat app, one WebSocket at a time",
   summary:
     "Snaccchat started life with an open API, client-chosen identities, world-readable message topics and ECB-mode encryption. This is the walkthrough of turning that vulnerable build into a hardened one.",
-  date: "2026-10-24",
+  date: "2026-10-25",
   tags: ["Spring Boot", "WebSocket", "Cryptography", "OWASP Top 10"],
   project: "snaccchat",
-  draft: true,
+  draft: false,
 };
 
 Snaccchat is a real-time chat app: direct and group messages, presence, typing indicators, read receipts and unread badges. It's a React client talking to a Spring Boot server over REST and **STOMP over WebSocket**, backed by PostgreSQL.
