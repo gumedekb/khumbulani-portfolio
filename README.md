@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# Khumbulani Gumede — Portfolio & Writeups
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal site of Khumbulani Gumede: full-stack projects plus security writeups on building, pentesting and hardening them.
 
-Currently, two official plugins are available:
+Live at [khumbulani.vercel.app](https://khumbulani.vercel.app).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Built with Next.js (App Router), React, TypeScript, Tailwind CSS and MDX.
 
-## React Compiler
+## Running locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:3000](http://localhost:3000).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The contact form sends email through [EmailJS](https://www.emailjs.com). Put these in `.env.local` (and in the Vercel project settings):
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | EmailJS service |
+| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | Notification sent to my inbox |
+| `NEXT_PUBLIC_EMAILJS_AUTOREPLY_TEMPLATE_ID` | Optional thank-you auto-reply to the visitor |
+| `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | EmailJS public key |
+
+Without them, the form falls back to opening the visitor's email client.
+
+## Content
+
+| What | Where |
+| --- | --- |
+| Projects | `src/lib/projects.ts` |
+| Education, skills, certifications | `src/lib/resume.ts` |
+| Contact details, navigation | `src/lib/site.ts` |
+| Writeups | `src/content/writeups/*.mdx` |
+
+### Writing a writeup
+
+Add an `.mdx` file to `src/content/writeups/`. The file name becomes the URL (`/writeups/<file-name>`). Start it with its metadata:
+
+```mdx
+export const metadata = {
+  title: "My writeup",
+  summary: "One or two sentences shown on cards and in search results.",
+  date: "2026-10-24",
+  tags: ["Pentesting"],
+  project: "snaccchat", // optional: links the writeup and the project page
+  draft: true,          // optional: shown in `npm run dev` only
+};
+
+Your content in Markdown…
 ```
+
+Besides normal Markdown (tables, code blocks with syntax highlighting and `title="File.java"`), these components are available without importing them:
+
+- `<Callout type="info | warning | success" title="…">…</Callout>`
+- `<Finding title="…" severity="critical | high | medium | low" fix={<>…</>}>…</Finding>`
+- `<StatGrid><Stat value="14" label="Vulnerabilities" tone="critical" /></StatGrid>`
+- `<SeverityBadge level="high" />`
+
+Drafts are hidden from production builds. To preview them in a production build, run `SHOW_DRAFTS=1 npm run build`.
+
+The writeups also publish an RSS feed at `/writeups/feed.xml`.

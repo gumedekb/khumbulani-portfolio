@@ -1,0 +1,169 @@
+export const metadata = {
+  title: "Hardening Snaccchat: securing a real-time chat app, one WebSocket at a time",
+  summary:
+    "Snaccchat started life with an open API, client-chosen identities, world-readable message topics and ECB-mode encryption. This is the walkthrough of turning that vulnerable build into a hardened one.",
+  date: "2026-10-24",
+  tags: ["Spring Boot", "WebSocket", "Cryptography", "OWASP Top 10"],
+  project: "snaccchat",
+  draft: true,
+};
+
+Snaccchat is a real-time chat app: direct and group messages, presence, typing indicators, read receipts and unread badges. It's a React client talking to a Spring Boot server over REST and **STOMP over WebSocket**, backed by PostgreSQL.
+
+The repository doubles as a security case study. The [`vulnerable` branch](https://github.com/gumedekb/snaccchat-app/tree/vulnerable) is the original build; `main` is the hardened one. The [full diff](https://github.com/gumedekb/snaccchat-app/compare/vulnerable...main) is the point, and this writeup walks through what it changes and why.
+
+<Callout title="Why WebSockets make this harder">
+  A REST API has one obvious gate: the HTTP request. A WebSocket app has several. There's the
+  handshake, the STOMP `CONNECT` frame, every `SUBSCRIBE` and every `SEND`. Locking down the REST
+  endpoints is only half the job if the socket still trusts whoever connects.
+</Callout>
+
+## Problem 1: the server believed whoever you said you were
+
+The security config allowed everything. Its rules ended with a catch-all:
+
+```java title="SecurityConfig.java (vulnerable)"
+.requestMatchers("/signup", "/login", "/api/auth/**").permitAll() // allow these
+.anyRequest().permitAll() // allow everything else too
+```
+
+Worse, the API took **identity from the request itself**. Sending a message read `senderId` from the JSON body, so you could post as anyone. Reading a conversation took both user IDs from the URL, so you could read anyone's:
+
+```java title="MessageController.java (vulnerable)"
+@GetMapping("/private/{user1Id}/{user2Id}")
+public ResponseEntity<?> getPrivateMessages(@PathVariable Long user1Id, @PathVariable Long user2Id) {
+    List<Message> messages = messageService.getPrivateMessages(user1Id, user2Id);
+    // ...returned to whoever asked
+```
+
+<Finding title="Impersonation and reading other users' conversations" severity="critical" fix={<>A <code>JwtAuthFilter</code> authenticates every <code>/api</code> request from its token, <code>senderId</code> was deleted from the request DTO, and controllers take the caller from <code>Authentication</code>. Reads check participation and group membership.</>}>
+  With no authentication and client-supplied IDs, any request could send messages as any user and
+  read any private or group conversation.
+</Finding>
+
+The fixed endpoint derives the caller from the verified token and refuses to serve conversations they're not part of:
+
+```java title="MessageController.java (hardened)" {3-6}
+@GetMapping("/private/{user1Id}/{user2Id}")
+public ResponseEntity<?> getPrivateMessages(@PathVariable Long user1Id, @PathVariable Long user2Id, Authentication auth) {
+    Long callerId = (Long) auth.getPrincipal();
+    if (!user1Id.equals(callerId) && !user2Id.equals(callerId)) {
+        return ResponseEntity.status(403).body("You are not a participant in this conversation");
+    }
+    // ...
+```
+
+## Problem 2: private messages on a public channel
+
+In STOMP, a `/topic/...` destination is a broadcast channel: **anyone who subscribes receives everything sent to it**. The vulnerable server delivered private messages and typing indicators to `/topic/chat/{receiverId}`:
+
+```java title="MessageController.java (vulnerable)"
+messagingTemplate.convertAndSend("/topic/chat/" + r.getReceiverId(), SocketChatMessage.from(saved));
+```
+
+Combined with an unauthenticated `CONNECT`, any client could subscribe to `/topic/chat/2` and silently read user 2's incoming messages in real time.
+
+<Finding title="Eavesdropping on private messages over WebSocket" severity="critical" fix={<>A <code>StompAuthChannelInterceptor</code> validates the JWT on <code>CONNECT</code> and binds a principal to the session. Private messages and typing now go to per-user queues with <code>convertAndSendToUser</code>.</>}>
+  Private messages and typing events were published to world-readable topics, and nothing checked
+  who was connected.
+</Finding>
+
+The interceptor rejects any `CONNECT` frame without a valid token, then attaches the user to the session:
+
+```java title="StompAuthChannelInterceptor.java"
+if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+    List<String> authHeaders = accessor.getNativeHeader("Authorization");
+    if (authHeaders == null || authHeaders.isEmpty()) {
+        throw new IllegalArgumentException("Missing Authorization header on STOMP CONNECT");
+    }
+    // ...parse and verify the JWT, then:
+    accessor.setUser(principal);
+}
+```
+
+With a principal on every session, Spring can route to **user destinations**. A message for user 2 is delivered only to user 2's own sessions:
+
+```java title="MessageController.java (hardened)"
+messagingTemplate.convertAndSendToUser(String.valueOf(r.getReceiverId()), "/queue/messages",
+                                       SocketChatMessage.from(saved));
+```
+
+Group messages and group typing stay on topics, since every member should receive them. The membership check moved to the REST reads instead.
+
+## Problem 3: anyone could set anyone's online status
+
+Presence was driven by a `userId` header the **client** put on its `CONNECT` frame:
+
+```java title="WebSocketDisconnectListener.java (vulnerable)"
+String userIdHeader = accessor.getFirstNativeHeader("userId");
+// ...
+userRepository.updateOnlineStatus(userId, true); // mark user as online
+```
+
+<Finding title="Presence spoofing via a client-supplied header" severity="medium" fix={<>Presence comes from the authenticated session principal, which can't be forged. A user is only marked offline when their <em>last</em> session closes, checked against <code>SimpUserRegistry</code>.</>}>
+  Any client could mark any user online or offline by sending a different `userId`.
+</Finding>
+
+## Problem 4: encryption that leaked patterns
+
+Messages were encrypted at rest, which sounds good. But this is how the cipher was created:
+
+```java title="EncryptionUtil.java (vulnerable)"
+Cipher cipher = Cipher.getInstance("AES");
+```
+
+Asking Java for plain `"AES"` gives you **AES in ECB mode** by default. ECB encrypts each block independently with no randomness, so identical messages produce identical ciphertext. Anyone with database access can spot repeated messages and patterns without decrypting anything. It also has no integrity check, so tampered ciphertext isn't detected.
+
+<Finding title="AES in ECB mode for messages at rest" severity="high" fix={<>Switched to <strong>AES-GCM</strong> with a fresh random 96-bit nonce for every message and a 128-bit authentication tag. The nonce is stored alongside the ciphertext.</>}>
+  Deterministic, unauthenticated encryption: equal plaintexts gave equal ciphertexts, and
+  modifications went unnoticed.
+</Finding>
+
+```java title="EncryptionUtil.java (hardened)"
+private static final String TRANSFORMATION = "AES/GCM/NoPadding";
+private static final int IV_LENGTH = 12;          // 96-bit nonce, the recommended size for GCM
+private static final int TAG_LENGTH_BITS = 128;   // authentication tag length
+
+public String encrypt(String text) {
+    byte[] iv = new byte[IV_LENGTH];
+    secureRandom.nextBytes(iv);                   // fresh random nonce every time
+    Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+    cipher.init(Cipher.ENCRYPT_MODE, key(), new GCMParameterSpec(TAG_LENGTH_BITS, iv));
+    byte[] ciphertext = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
+    // stored as base64( iv || ciphertext+tag ). The IV isn't secret, only unique.
+```
+
+## Problem 5: the smaller cracks
+
+None of these is dramatic on its own, but each makes an attacker's life easier.
+
+| Issue | Fix |
+| --- | --- |
+| Unlimited login and signup attempts | `RateLimitFilter`: 5 attempts per minute per IP, then `429` |
+| Errors returned `e.getMessage()` to the client | `GlobalExceptionHandler` with proper status codes (`400`, `403`, `405`) |
+| No input validation | Bean Validation on DTOs, e.g. `@NotBlank` and `@Size(max = 5000)` on message text |
+| Auth filters printed user IDs and JWT parser errors to the logs | Logging removed |
+| Outdated dependencies | Spring Boot 3.5.0 → 3.5.3, jjwt 0.11.5 → 0.12.6, retired MySQL connector replaced |
+
+## Deploying it safely
+
+Hardening didn't stop at the code. The deployment splits the client (Vercel) and server (Render), and a few decisions there matter for security:
+
+- **CORS is an explicit allowlist, never `*`.** The client sends credentials, so the allowed origins come from configuration and apply to both the REST API and the SockJS handshake.
+- **No secrets in the repo or the image.** Database credentials, the JWT secret and the encryption key all come from the environment. `.dockerignore` keeps `.env` files and keystores out of the build.
+- **The container runs as an unprivileged user**, using a multi-stage build with a JDK to build and a slim JRE to run.
+- **TLS terminates at the platform edge**, so the app no longer ships a self-signed keystore.
+
+## Recap
+
+| Vulnerability | OWASP category |
+| --- | --- |
+| Open API, client-chosen identity | A01 Broken Access Control |
+| Private messages on world-readable topics | A01 Broken Access Control |
+| Presence spoofing | A07 Identification & Authentication Failures |
+| AES-ECB encryption at rest | A02 Cryptographic Failures |
+| No rate limiting | A07 Identification & Authentication Failures |
+| Error messages and token details leaking | A05 Security Misconfiguration / A09 Logging Failures |
+| Outdated dependencies | A06 Vulnerable & Outdated Components |
+
+The biggest lesson from Snaccchat: **real-time features need the same access control as everything else.** It's easy to secure the REST endpoints you can see in Postman and forget that the socket is a second, quieter API with its own front door.
