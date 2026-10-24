@@ -1,0 +1,300 @@
+/*
+ * Long-form writeup typography, applied with className="article".
+ * Rules target the article's direct children (what Markdown produces), so
+ * custom MDX components (Finding, Callout, …) keep their own styling.
+ * Wrapped in the components layer so Tailwind utilities still win.
+ */
+@layer components {
+  .article {
+    color: var(--muted);
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    overflow-wrap: break-word;
+  }
+
+  @media (min-width: 640px) {
+    .article {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* Vertical rhythm: space between blocks, more before headings. */
+  .article > * + * {
+    margin-top: 1.4em;
+  }
+
+  .article > :first-child {
+    margin-top: 0;
+  }
+
+  /* ---------- Headings ---------- */
+
+  .article > h2,
+  .article > h3 {
+    color: var(--foreground);
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    scroll-margin-top: 6rem;
+  }
+
+  .article > h2 {
+    margin-top: 2.8em;
+    font-size: 1.6em;
+    line-height: 1.25;
+  }
+
+  .article > h2::before {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 4px;
+    margin-bottom: 0.9rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+
+  .article > h3 {
+    margin-top: 2.2em;
+    font-size: 1.25em;
+    line-height: 1.35;
+  }
+
+  .article > h2 + *,
+  .article > h3 + * {
+    margin-top: 0.8em;
+  }
+
+  /* ---------- Inline text ---------- */
+
+  .article strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .article > :not(figure, div) a,
+  .article > .table-wrap a {
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .article > :not(figure, div) a:hover,
+  .article > .table-wrap a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  /* Inline code: a soft pill. */
+  .article > :not(figure, div) code,
+  .article > .table-wrap code {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background-color: var(--subtle);
+    padding: 0.1em 0.4em;
+    color: var(--foreground);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.84em;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- Lists ---------- */
+
+  .article > ul,
+  .article > ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  .article > ul > li,
+  .article > ol > li {
+    position: relative;
+  }
+
+  .article > ul > li + li,
+  .article > ol > li + li {
+    margin-top: 0.7em;
+  }
+
+  .article > ul > li {
+    padding-left: 1.6em;
+  }
+
+  .article > ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.3em;
+    top: 0.72em;
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  }
+
+  .article > ol {
+    counter-reset: step;
+  }
+
+  .article > ol > li {
+    padding-left: 2.6em;
+    counter-increment: step;
+  }
+
+  .article > ol > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    display: grid;
+    width: 1.75em;
+    height: 1.75em;
+    place-items: center;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-family: var(--font-mono), monospace;
+    font-size: 0.8em;
+    font-weight: 700;
+  }
+
+  /* ---------- Quotes & rules ---------- */
+
+  .article > blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.25em;
+    color: var(--foreground);
+    font-style: italic;
+  }
+
+  .article > hr {
+    margin: 3em 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ---------- Tables (wrapped in .table-wrap by mdx-components) ---------- */
+
+  .article > .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background-color: var(--surface);
+  }
+
+  .article > .table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+    line-height: 1.6;
+  }
+
+  .article > .table-wrap th {
+    background-color: var(--subtle);
+    padding: 0.8rem 1.1rem;
+    color: var(--foreground);
+    font-family: var(--font-mono), monospace;
+    font-size: 0.78em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .article > .table-wrap td {
+    border-top: 1px solid var(--line);
+    padding: 0.85rem 1.1rem;
+    vertical-align: top;
+  }
+
+  .article > .table-wrap td:first-child {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  .article > .table-wrap tbody tr {
+    transition: background-color 0.2s;
+  }
+
+  .article > .table-wrap tbody tr:hover {
+    background-color: color-mix(in oklab, var(--accent) 5%, transparent);
+  }
+
+  /* ---------- Code blocks: terminal-style window ---------- */
+
+  .article > figure[data-rehype-pretty-code-figure] {
+    margin-top: 1.8em;
+    margin-bottom: 0;
+    overflow: hidden;
+    border: 1px solid #30363d;
+    border-radius: 14px;
+    background-color: #0d1117;
+    box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.55);
+  }
+
+  /* Title bar with the three window dots; shown even without a title. */
+  .article > figure[data-rehype-pretty-code-figure] > figcaption,
+  .article > figure[data-rehype-pretty-code-figure]:not(:has(figcaption))::before {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    border-bottom: 1px solid #30363d;
+    background-color: #161b22;
+    padding: 0.6rem 1rem;
+    color: #9198a1;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .article > figure[data-rehype-pretty-code-figure]:not(:has(figcaption))::before {
+    content: "";
+    height: 2.4rem;
+    box-sizing: border-box;
+    background-image:
+      radial-gradient(circle at 6px 50%, #ff5f57 5px, transparent 5.5px),
+      radial-gradient(circle at 24px 50%, #febc2e 5px, transparent 5.5px),
+      radial-gradient(circle at 42px 50%, #28c840 5px, transparent 5.5px);
+    background-repeat: no-repeat;
+    background-position: 1rem center;
+  }
+
+  .article > figure[data-rehype-pretty-code-figure] > figcaption::before {
+    content: "";
+    flex-shrink: 0;
+    width: 48px;
+    height: 12px;
+    background:
+      radial-gradient(circle at 6px 6px, #ff5f57 5px, transparent 5.5px),
+      radial-gradient(circle at 24px 6px, #febc2e 5px, transparent 5.5px),
+      radial-gradient(circle at 42px 6px, #28c840 5px, transparent 5.5px);
+  }
+
+  .article > figure[data-rehype-pretty-code-figure] pre {
+    margin: 0;
+    overflow-x: auto;
+    padding: 1rem 0;
+    background: transparent;
+    color: #e6edf3;
+    font-size: 0.84rem;
+    line-height: 1.75;
+    scrollbar-color: #30363d transparent;
+  }
+
+  .article > figure[data-rehype-pretty-code-figure] pre code {
+    display: grid;
+    min-width: max-content;
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
+
+  .article > figure[data-rehype-pretty-code-figure] [data-line] {
+    padding: 0 1.25rem;
+  }
+
+  .article > figure[data-rehype-pretty-code-figure] [data-highlighted-line] {
+    background-color: rgb(164 139 255 / 0.14);
+    box-shadow: inset 3px 0 0 #a48bff;
+  }
+}

@@ -21,7 +21,8 @@ const withMDX = createMDX({
       "rehype-slug",
       [
         "rehype-pretty-code",
-        { theme: { light: "github-light", dark: "github-dark-dimmed" }, keepBackground: false },
+        // Code blocks are always dark terminal windows, so one dark theme.
+        { theme: "github-dark-default", keepBackground: false },
       ],
     ],
   },

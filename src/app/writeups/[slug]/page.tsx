@@ -8,6 +8,7 @@ import { Container, cardClass, cardHover, delay } from "@/components/ui";
 import { getProject } from "@/lib/projects";
 import { getWriteup, getWriteups } from "@/lib/writeups";
 import { SITE } from "@/lib/site";
+import "./article.css";
 
 export const dynamicParams = false;
 
@@ -81,7 +82,7 @@ export default async function WriteupPage({ params }: PageProps<"/writeups/[slug
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem]">
           {/* Body */}
-          <div className="prose max-w-3xl min-w-0 sm:prose-lg">
+          <div className="article min-w-0 max-w-3xl">
             <Content />
           </div>
 

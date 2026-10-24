@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
 /* Class-based dark mode: `.dark` on <html> (set before paint in layout.tsx). */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -98,100 +97,6 @@
     linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: 44px 44px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
-}
-
-/* ---------- Writeup typography ---------- */
-
-/* Point the typography plugin at the site tokens so prose follows the theme. */
-.prose {
-  --tw-prose-body: var(--muted);
-  --tw-prose-headings: var(--foreground);
-  --tw-prose-lead: var(--muted);
-  --tw-prose-links: var(--accent);
-  --tw-prose-bold: var(--foreground);
-  --tw-prose-counters: var(--accent);
-  --tw-prose-bullets: var(--accent);
-  --tw-prose-hr: var(--line);
-  --tw-prose-quotes: var(--foreground);
-  --tw-prose-quote-borders: var(--accent);
-  --tw-prose-captions: var(--muted);
-  --tw-prose-code: var(--foreground);
-  --tw-prose-th-borders: var(--line);
-  --tw-prose-td-borders: var(--line);
-}
-
-.prose :where(h2, h3, h4) {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-  scroll-margin-top: 6rem;
-}
-
-.prose :where(a) {
-  text-underline-offset: 3px;
-  text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
-}
-
-/* Inline code: a soft pill instead of the plugin's backticks. */
-.prose :where(:not(pre) > code) {
-  border-radius: 6px;
-  background-color: var(--subtle);
-  padding: 0.15em 0.4em;
-  font-weight: 500;
-}
-.prose :where(:not(pre) > code)::before,
-.prose :where(:not(pre) > code)::after {
-  content: none;
-}
-
-/* Code blocks from rehype-pretty-code (dual light/dark Shiki themes). */
-.prose figure[data-rehype-pretty-code-figure] {
-  margin: 1.75em 0;
-}
-.prose [data-rehype-pretty-code-title] {
-  border: 1px solid var(--line);
-  border-bottom: none;
-  border-radius: 14px 14px 0 0;
-  background-color: var(--subtle);
-  padding: 0.5rem 1rem;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-.prose [data-rehype-pretty-code-title] + pre {
-  margin-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.prose pre {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background-color: var(--surface);
-  padding: 1rem 0;
-  font-size: 0.85rem;
-  line-height: 1.7;
-  overflow-x: auto;
-}
-.prose pre code {
-  display: grid;
-}
-.prose pre [data-line] {
-  padding: 0 1.1rem;
-}
-.prose pre [data-highlighted-line] {
-  background-color: color-mix(in oklab, var(--accent) 12%, transparent);
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-.prose code[data-theme] span {
-  color: var(--shiki-light);
-}
-.dark .prose code[data-theme] span {
-  color: var(--shiki-dark);
-}
-
-/* Tables (e.g. findings summaries) scroll on small screens. */
-.prose table {
-  display: block;
-  overflow-x: auto;
-  font-size: 0.9em;
 }
 
 /* ---------- Motion ---------- */

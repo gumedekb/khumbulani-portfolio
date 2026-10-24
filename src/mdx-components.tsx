@@ -15,6 +15,12 @@ const components = {
         {children}
       </a>
     ),
+  // Tables scroll horizontally inside a bordered card on small screens.
+  table: (props) => (
+    <div className="table-wrap">
+      <table {...props} />
+    </div>
+  ),
   Callout,
   Finding,
   SeverityBadge,
